@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { css, Global } from "@emotion/react";
 import normalize from "./styles/normalize";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -21,7 +21,9 @@ function App() {
             ${normalize}
           `}
         />
-        {userAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+        <Suspense fallback={<div>loading...</div>}>
+          {userAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+        </Suspense>
       </div>
     </Router>
   );
