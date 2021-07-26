@@ -1,18 +1,29 @@
 import React from "react";
 import { css, Global } from "@emotion/react";
-import { Header } from "./componets/Header";
 import normalize from "./styles/normalize";
+import { BrowserRouter as Router } from "react-router-dom";
+
+const AuthenticatedApp = React.lazy(
+  () => import("./componets/AuthenticatedApp")
+);
+const UnauthenticatedApp = React.lazy(
+  () => import("./componets/UnauthenticatedApp")
+);
 
 function App() {
+  const userAuthenticated = true;
+
   return (
-    <div>
-      <Global
-        styles={css`
-          ${normalize}
-        `}
-      />
-      <Header />
-    </div>
+    <Router>
+      <div>
+        <Global
+          styles={css`
+            ${normalize}
+          `}
+        />
+        {userAuthenticated ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+      </div>
+    </Router>
   );
 }
 
