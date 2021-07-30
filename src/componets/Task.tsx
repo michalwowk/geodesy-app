@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled/macro";
 import { Draggable } from "react-beautiful-dnd";
+import { colors } from "styles/colors";
 
 export interface TaskI {
   id: string;
@@ -17,11 +18,15 @@ interface ContainerProps {
 }
 
 const Container = styled.div<ContainerProps>`
-  border: 1px solid lightgrey;
+  border: 1px solid ${colors.accent};
   border-radius: 2px;
   padding: 8px;
-  margin-bottom: 8px;
-  background-color: ${(props) => (props.isDragging ? "lightgreen" : "white")};
+  background-color: ${(props) => {
+    return props.isDragging ? colors.accent : colors.navy;
+  }};
+  color: ${(props) => {
+    return props.isDragging ? colors.navy : colors.white;
+  }};
 `;
 
 const Task = ({ task, index }: Props) => {

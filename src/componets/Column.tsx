@@ -3,6 +3,7 @@ import styled from "@emotion/styled/macro";
 import { Droppable } from "react-beautiful-dnd";
 
 import Task, { TaskI } from "./Task";
+import { AddTodoForm } from "./AddTodoForm";
 
 interface TaskListProps {
   isDraggingOver: boolean;
@@ -21,14 +22,14 @@ const Container = styled.div`
   margin: 8px;
   border: 1px solid lightgrey;
   border-radius: 2px;
+  padding: 10px;
 `;
-const Title = styled.h3`
-  padding: 8px;
-`;
+
+const Title = styled.h3``;
+
 const TaskList = styled.div<TaskListProps>`
-  padding: 8px;
-  background-color: ${(props) =>
-    props.isDraggingOver ? "lightblue" : "white"};
+  display: grid;
+  row-gap: 8px;
 `;
 
 const Column = ({ column, tasks }: Props) => {
@@ -49,6 +50,7 @@ const Column = ({ column, tasks }: Props) => {
           </TaskList>
         )}
       </Droppable>
+      <AddTodoForm columnId={column.id} />
     </Container>
   );
 };

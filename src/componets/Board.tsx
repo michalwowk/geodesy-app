@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
+import styled from "@emotion/styled/macro";
 import { DragDropContext } from "react-beautiful-dnd";
-import { initialData } from "utils/initialData";
+
+import { useProjectsContext } from "context/projectsContext";
 import Column from "./Column";
 import { TaskI } from "./Task";
 
+const Container = styled.div`
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
 export const Board = () => {
-  const [state, setState] = useState(initialData);
+  const { projects, setProjects } = useProjectsContext();
 
   const onDragEnd = (result: any): void => {
     const { destination, source, draggableId } = result;
@@ -21,7 +29,7 @@ export const Board = () => {
       return;
     }
 
-    const newColumns = [...state.columns];
+    const newColumns = [...projects.columns];
 
     const startCol = newColumns.find(
       (column) => column.id === source.droppableId
@@ -34,7 +42,7 @@ export const Board = () => {
     startCol?.taskIds.splice(source.index, 1);
     endCol?.taskIds.splice(destination.index, 0, draggableId);
 
-    setState((prevState) => ({
+    setProjects((prevState) => ({
       ...prevState,
       columns: newColumns,
     }));
@@ -42,16 +50,20 @@ export const Board = () => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {state.columnOrder.map((columnId) => {
-        const column = state.columns.find((column) => columnId === column.id);
-        const tasks = column?.taskIds.map((taskId) => {
-          return state.tasks.find((task) => task.id === taskId);
-        }) as TaskI[];
+      <Container>
+        {projects.columnOrder.map((columnId) => {
+          const column = projects.columns.find(
+            (column) => columnId === column.id
+          );
+          const tasks = column?.taskIds.map((taskId) => {
+            return projects.tasks.find((task) => task.id === taskId);
+          }) as TaskI[];
 
-        if (!column || !tasks) return null;
+          if (!column || !tasks) return null;
 
-        return <Column key={column.id} tasks={tasks} column={column} />;
-      })}
+          return <Column key={column.id} tasks={tasks} column={column} />;
+        })}
+      </Container>
     </DragDropContext>
   );
 };
