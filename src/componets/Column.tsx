@@ -44,7 +44,12 @@ const Column = ({ column, tasks }: Props) => {
             {...provided.droppableProps}
           >
             {tasks.map((task, index) => (
-              <Task key={task.id} task={task} index={index} />
+              <Task
+                columnId={column.id}
+                key={task.id}
+                task={task}
+                index={index}
+              />
             ))}
             {provided.placeholder}
           </TaskList>

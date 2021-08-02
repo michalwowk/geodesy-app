@@ -6,6 +6,7 @@ import { FiEdit3 } from "react-icons/fi";
 import Modal from "@material-ui/core/Modal";
 import { colors } from "styles/colors";
 import { VisuallyHidden } from "./VisuallyHidden";
+import { useProjectsContext } from "context/projectsContext";
 
 export interface TaskI {
   id: string;
@@ -15,6 +16,7 @@ export interface TaskI {
 interface Props {
   task: TaskI;
   index: number;
+  columnId: string;
 }
 
 interface ContainerProps {
@@ -58,8 +60,18 @@ const ModalWrapper = styled.div`
   padding: 50px;
 `;
 
-const Task = ({ task, index }: Props) => {
+const DeleteTaskButton = styled.div`
+  background-color: orangered;
+  display: inline-block;
+  padding: 12px 25px;
+  font-weight: 600;
+  color: ${colors.white};
+  cursor: pointer;
+`;
+
+const Task = ({ task, index, columnId }: Props) => {
   const [open, setOpen] = React.useState(false);
+  const { projects, setProjects } = useProjectsContext();
 
   const handleOpen = () => {
     setOpen(true);
@@ -69,14 +81,26 @@ const Task = ({ task, index }: Props) => {
     setOpen(false);
   };
 
-  const modalBody = (
-    <ModalWrapper>
-      <h2 id="simple-modal-title">Text in a modal</h2>
-      <p id="simple-modal-description">
-        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p>
-    </ModalWrapper>
-  );
+  const handleProjectDelete = () => {
+    const tasks = projects.tasks.filter((t) => t.id !== task.id);
+
+    const columns = [...projects.columns];
+    const currentColumn = columns.find((column) => column.id === columnId);
+
+    if (!currentColumn) {
+      return;
+    }
+
+    const filteredTasks = currentColumn.taskIds.filter((t) => t !== task.id);
+    currentColumn.taskIds = filteredTasks;
+
+    setProjects({
+      ...projects,
+      columns,
+      tasks,
+    });
+    handleClose();
+  };
 
   return (
     <Draggable draggableId={task.id} index={index}>
@@ -99,7 +123,13 @@ const Task = ({ task, index }: Props) => {
               aria-labelledby="simple-modal-title"
               aria-describedby="simple-modal-description"
             >
-              {modalBody}
+              <ModalWrapper>
+                <h2 id="simple-modal-title">#{task.id}</h2>
+                <p id="simple-modal-description">{task.content}</p>
+                <DeleteTaskButton onClick={handleProjectDelete}>
+                  Delete Project
+                </DeleteTaskButton>
+              </ModalWrapper>
             </Modal>
           </Wrapper>
         </Container>
