@@ -2,9 +2,8 @@ import React from "react";
 import styled from "@emotion/styled/macro";
 import { DragDropContext } from "react-beautiful-dnd";
 
-import { useProjectsContext } from "context/projectsContext";
-import Column from "./Column";
-import { TaskI } from "./Task";
+import { useBoardContext } from "context/boardContext";
+import BoardColumn from "./BoardColumn";
 
 const Container = styled.div`
   display: flex;
@@ -13,7 +12,7 @@ const Container = styled.div`
 `;
 
 export const Board = () => {
-  const { projects, setProjects } = useProjectsContext();
+  const { boardData, setBoardData } = useBoardContext();
 
   const onDragEnd = (result: any): void => {
     const { destination, source, draggableId } = result;
@@ -29,7 +28,7 @@ export const Board = () => {
       return;
     }
 
-    const newColumns = [...projects.columns];
+    const newColumns = [...boardData];
 
     const startCol = newColumns.find(
       (column) => column.id === source.droppableId
@@ -39,29 +38,28 @@ export const Board = () => {
       (column) => column.id === destination.droppableId
     );
 
-    startCol?.taskIds.splice(source.index, 1);
-    endCol?.taskIds.splice(destination.index, 0, draggableId);
+    if (!startCol || !endCol) {
+      return;
+    }
 
-    setProjects((prevState) => ({
-      ...prevState,
-      columns: newColumns,
-    }));
+    const droppedProject = startCol.projects.find((p) => p.id === draggableId);
+
+    if (!droppedProject) {
+      return;
+    }
+
+    startCol.projects.splice(source.index, 1);
+
+    endCol.projects.splice(destination.index, 0, droppedProject);
+
+    setBoardData(newColumns);
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Container>
-        {projects.columnOrder.map((columnId) => {
-          const column = projects.columns.find(
-            (column) => columnId === column.id
-          );
-          const tasks = column?.taskIds.map((taskId) => {
-            return projects.tasks.find((task) => task.id === taskId);
-          }) as TaskI[];
-
-          if (!column || !tasks) return null;
-
-          return <Column key={column.id} tasks={tasks} column={column} />;
+        {boardData.map((column) => {
+          return <BoardColumn key={column.id} column={column} />;
         })}
       </Container>
     </DragDropContext>

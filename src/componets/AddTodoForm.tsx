@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 
 import { colors } from "styles/colors";
 import { VisuallyHidden } from "./VisuallyHidden";
-import { useProjectsContext } from "context/projectsContext";
+import { useBoardContext } from "context/boardContext";
 
 const Wrapper = styled.div`
   display: flex;
@@ -89,7 +89,7 @@ interface Props {
 
 export const AddTodoForm = ({ columnId }: Props) => {
   const [formState, setFormState] = useState<"closed" | "open">("closed");
-  const { projects, setProjects } = useProjectsContext();
+  const { boardData, setBoardData } = useBoardContext();
 
   const formik = useFormik({
     initialValues: {
@@ -97,21 +97,21 @@ export const AddTodoForm = ({ columnId }: Props) => {
     },
     onSubmit: ({ content }) => {
       const id = uuid();
-      const columns = [...projects.columns];
+      const newBoardData = [...boardData];
 
-      const currentColumn = columns.find((column) => column.id === columnId);
+      let currentColumn = newBoardData.find((column) => column.id === columnId);
 
       if (!currentColumn) {
         return;
       }
 
-      currentColumn.taskIds = [...currentColumn.taskIds, id];
-
-      setProjects({
-        ...projects,
-        columns,
-        tasks: [...projects.tasks, { id, content }],
+      currentColumn.projects.push({
+        id,
+        content,
       });
+
+      setBoardData(newBoardData);
+
       setFormState("closed");
     },
   });

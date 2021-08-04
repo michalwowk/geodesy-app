@@ -6,15 +6,15 @@ import { FiEdit3 } from "react-icons/fi";
 import Modal from "@material-ui/core/Modal";
 import { colors } from "styles/colors";
 import { VisuallyHidden } from "./VisuallyHidden";
-import { useProjectsContext } from "context/projectsContext";
+import { useBoardContext } from "context/boardContext";
 
-export interface TaskI {
+export interface ProjectProps {
   id: string;
   content: string;
 }
 
 interface Props {
-  task: TaskI;
+  task: ProjectProps;
   index: number;
   columnId: string;
 }
@@ -71,7 +71,7 @@ const DeleteTaskButton = styled.div`
 
 const Task = ({ task, index, columnId }: Props) => {
   const [open, setOpen] = React.useState(false);
-  const { projects, setProjects } = useProjectsContext();
+  const { boardData, setBoardData } = useBoardContext();
 
   const handleOpen = () => {
     setOpen(true);
@@ -82,23 +82,20 @@ const Task = ({ task, index, columnId }: Props) => {
   };
 
   const handleProjectDelete = () => {
-    const tasks = projects.tasks.filter((t) => t.id !== task.id);
+    const newBoardData = [...boardData];
 
-    const columns = [...projects.columns];
-    const currentColumn = columns.find((column) => column.id === columnId);
+    let currentColumn = newBoardData.find((column) => column.id === columnId);
 
     if (!currentColumn) {
       return;
     }
 
-    const filteredTasks = currentColumn.taskIds.filter((t) => t !== task.id);
-    currentColumn.taskIds = filteredTasks;
+    currentColumn.projects = currentColumn.projects.filter(
+      (p) => p.id !== task.id
+    );
 
-    setProjects({
-      ...projects,
-      columns,
-      tasks,
-    });
+    setBoardData(newBoardData);
+
     handleClose();
   };
 

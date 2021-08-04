@@ -2,20 +2,19 @@ import React from "react";
 import styled from "@emotion/styled/macro";
 import { Droppable } from "react-beautiful-dnd";
 
-import Task, { TaskI } from "./Task";
+import Task, { ProjectProps } from "./Task";
 import { AddTodoForm } from "./AddTodoForm";
 
 interface TaskListProps {
   isDraggingOver: boolean;
 }
 
-interface Props {
+export interface BoardColumnProps {
   column: {
     id: string;
     title: string;
-    taskIds: string[];
+    projects: ProjectProps[];
   };
-  tasks: TaskI[];
 }
 
 const Container = styled.div`
@@ -32,7 +31,7 @@ const TaskList = styled.div<TaskListProps>`
   row-gap: 8px;
 `;
 
-const Column = ({ column, tasks }: Props) => {
+const BoardColumn = ({ column }: BoardColumnProps) => {
   return (
     <Container>
       <Title>{column.title}</Title>
@@ -43,11 +42,11 @@ const Column = ({ column, tasks }: Props) => {
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {tasks.map((task, index) => (
+            {column.projects.map((project, index) => (
               <Task
                 columnId={column.id}
-                key={task.id}
-                task={task}
+                key={project.id}
+                task={project}
                 index={index}
               />
             ))}
@@ -60,4 +59,4 @@ const Column = ({ column, tasks }: Props) => {
   );
 };
 
-export default Column;
+export default BoardColumn;
