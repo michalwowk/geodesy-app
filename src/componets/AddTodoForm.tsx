@@ -93,9 +93,9 @@ export const AddTodoForm = ({ columnId }: Props) => {
 
   const formik = useFormik({
     initialValues: {
-      content: "",
+      title: "",
     },
-    onSubmit: ({ content }) => {
+    onSubmit: (values, { resetForm }) => {
       const id = uuid();
       const newBoardData = [...boardData];
 
@@ -107,12 +107,18 @@ export const AddTodoForm = ({ columnId }: Props) => {
 
       currentColumn.projects.push({
         id,
-        content,
+        title: values.title,
       });
 
       setBoardData(newBoardData);
 
       setFormState("closed");
+
+      resetForm({
+        values: {
+          title: "",
+        },
+      });
     },
   });
 
@@ -132,11 +138,12 @@ export const AddTodoForm = ({ columnId }: Props) => {
     <Wrapper>
       {isFormOpen ? (
         <form onSubmit={formik.handleSubmit}>
-          <textarea
-            value={formik.values.content}
+          <input
+            value={formik.values.title}
             onChange={formik.handleChange}
-            name="content"
-            id="content"
+            name="title"
+            type="text"
+            id="title"
             placeholder="Dodaj projekt..."
           />
           <AddTodoWrapper>
