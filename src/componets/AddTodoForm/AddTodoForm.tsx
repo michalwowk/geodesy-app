@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import { v4 as uuid } from "uuid";
 
 import { colors } from "styles/colors";
-import { VisuallyHidden } from "./VisuallyHidden";
+import { VisuallyHidden } from "../VisuallyHidden";
 import { useBoardContext } from "context/boardContext";
 
 const Wrapper = styled.div`

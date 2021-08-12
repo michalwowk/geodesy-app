@@ -3,7 +3,7 @@ import styled from "@emotion/styled/macro";
 import { Droppable } from "react-beautiful-dnd";
 
 import Task, { ProjectProps } from "./Task";
-import { AddTodoForm } from "./AddTodoForm";
+import { AddTodoForm } from "./AddTodoForm/AddTodoForm";
 
 interface TaskListProps {
   isDraggingOver: boolean;
