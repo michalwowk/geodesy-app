@@ -14,14 +14,14 @@ export const BoardColumnsData = [
 ];
 
 export const Projects = [
-  { id: "11", content: "Take out the garbage" },
-  { id: "12", content: "Walk out the dog" },
-  { id: "13", content: "Do the shopping list" },
-  { id: "14", content: "Cook a breakfast" },
-  { id: "21", content: "Watch my favorite show" },
-  { id: "22", content: "Charge my phone" },
-  { id: "23", content: "Cook dinner" },
-  { id: "24", content: "Play some video games" },
+  { id: "11", title: "Take out the garbage" },
+  { id: "12", title: "Walk out the dog" },
+  { id: "13", title: "Do the shopping list" },
+  { id: "14", title: "Cook a breakfast" },
+  { id: "21", title: "Watch my favorite show" },
+  { id: "22", title: "Charge my phone" },
+  { id: "23", title: "Cook dinner" },
+  { id: "24", title: "Play some video games" },
 ];
 
 export const BoardData = [
@@ -29,20 +29,20 @@ export const BoardData = [
     id: "column-1",
     title: "To do",
     projects: [
-      { id: "11", content: "Take out the garbage" },
-      { id: "12", content: "Walk out the dog" },
-      { id: "13", content: "Do the shopping list" },
-      { id: "14", content: "Cook a breakfast" },
+      { id: "11", title: "Take out the garbage" },
+      { id: "12", title: "Walk out the dog" },
+      { id: "13", title: "Do the shopping list" },
+      { id: "14", title: "Cook a breakfast" },
     ],
   },
   {
     id: "column-2",
     title: "In Progress",
     projects: [
-      { id: "21", content: "Watch my favorite show" },
-      { id: "22", content: "Charge my phone" },
-      { id: "23", content: "Cook dinner" },
-      { id: "24", content: "Play some video games" },
+      { id: "21", title: "Watch my favorite show" },
+      { id: "22", title: "Charge my phone" },
+      { id: "23", title: "Cook dinner" },
+      { id: "24", title: "Play some video games" },
     ],
   },
 ];
