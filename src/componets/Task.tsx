@@ -7,10 +7,11 @@ import Modal from "@material-ui/core/Modal";
 import { colors } from "styles/colors";
 import { VisuallyHidden } from "./VisuallyHidden";
 import { useBoardContext } from "context/boardContext";
+import { Link } from "react-router-dom";
 
 export interface ProjectProps {
   id: string;
-  content: string;
+  title: string;
 }
 
 interface Props {
@@ -26,7 +27,7 @@ interface ContainerProps {
 const Container = styled.div<ContainerProps>`
   border: 1px solid ${colors.accent};
   border-radius: 2px;
-  padding: 8px;
+  padding: 10px 12px;
   background-color: ${(props) => {
     return props.isDragging ? colors.accent : colors.navy;
   }};
@@ -41,64 +42,12 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const EditButton = styled.div`
-  position: relative;
-  z-index: 2;
-  cursor: pointer;
-  margin-left: 15px;
-`;
-
-const ModalWrapper = styled.div`
-  width: 50%;
-  max-width: 800px;
-  background-color: ${colors.white};
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  position: absolute;
-  color: ${colors.black};
-  padding: 50px;
-`;
-
-const DeleteTaskButton = styled.div`
-  background-color: orangered;
-  display: inline-block;
-  padding: 12px 25px;
-  font-weight: 600;
+const StyledLink = styled(Link)`
   color: ${colors.white};
-  cursor: pointer;
+  text-decoration: none;
 `;
 
-const Task = ({ task, index, columnId }: Props) => {
-  const [open, setOpen] = React.useState(false);
-  const { boardData, setBoardData } = useBoardContext();
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleProjectDelete = () => {
-    const newBoardData = [...boardData];
-
-    let currentColumn = newBoardData.find((column) => column.id === columnId);
-
-    if (!currentColumn) {
-      return;
-    }
-
-    currentColumn.projects = currentColumn.projects.filter(
-      (p) => p.id !== task.id
-    );
-
-    setBoardData(newBoardData);
-
-    handleClose();
-  };
-
+const Task = ({ task, index }: Props) => {
   return (
     <Draggable draggableId={task.id} index={index}>
       {(provided, snapshot) => (
@@ -109,25 +58,7 @@ const Task = ({ task, index, columnId }: Props) => {
           isDragging={snapshot.isDragging}
         >
           <Wrapper>
-            <div>{task.content}</div>
-            <EditButton onClick={handleOpen}>
-              <FiEdit3 />
-              <VisuallyHidden>Edit Project</VisuallyHidden>
-            </EditButton>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="simple-modal-title"
-              aria-describedby="simple-modal-description"
-            >
-              <ModalWrapper>
-                <h2 id="simple-modal-title">#{task.id}</h2>
-                <p id="simple-modal-description">{task.content}</p>
-                <DeleteTaskButton onClick={handleProjectDelete}>
-                  Delete Project
-                </DeleteTaskButton>
-              </ModalWrapper>
-            </Modal>
+            <StyledLink to={`/projects/${task.title}`}>{task.title}</StyledLink>
           </Wrapper>
         </Container>
       )}
